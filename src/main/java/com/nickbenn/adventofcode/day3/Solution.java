@@ -5,11 +5,10 @@ import com.nickbenn.adventofcode.util.Defaults;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,73 +37,58 @@ public class Solution {
   public int getMisplacedPrioritySum() throws IOException {
     try (Stream<String> lines = new DataSource(getClass(), inputFile).lines()) {
       return lines
-          .mapToInt((line) -> {
-            int rucksackLength = line.length() / 2;
-            String left = line.substring(0, rucksackLength);
-            String right = line.substring(rucksackLength);
-            return priority(getMatch(left, right).get(0));
-          })
+          .mapToInt(this::getMisplacedItemPriority)
           .sum();
     }
   }
 
   public int getBadgePrioritySum() throws IOException {
     try (Stream<String> lines = new DataSource(getClass(), inputFile).lines()) {
-      List<String> pending = new LinkedList<>();
-      AtomicInteger priority = new AtomicInteger();
-      lines
-          .forEachOrdered((line) -> {
-            pending.add(line);
-            if (pending.size() == GROUP_SIZE) {
-              priority.addAndGet(priority(getMatch(pending.toArray(new String[0])).get(0)));
-              pending.clear();
-            }
-          });
-      return priority.get();
+      Collection<String> pending = new LinkedList<>();
+      return lines
+          .mapToInt((line) -> getBadgePriority(line, pending))
+          .sum();
     }
   }
 
-  private List<Integer> getMatch(String... lines) {
-    return Stream.of(lines)
-        .collect(
-            Collector.of(
-                Intersection::new,
-                (Intersection intersection, String line) ->
-                    intersection.intersect(line.chars().boxed().collect(Collectors.toSet())),
-                (intersection1, intersection2) ->
-                    new Intersection(intersection1.getContent(), intersection2.getContent()),
-                (intersection) -> new LinkedList<>(intersection.getContent())
-            )
-        );
+  private int getMisplacedItemPriority(String line) {
+    int rucksackLength = line.length() / 2;
+    String left = line.substring(0, rucksackLength);
+    String right = line.substring(rucksackLength);
+    return priority(intersection(List.of(left, right)).get(0));
+  }
+
+  private int getBadgePriority(String line, Collection<String> pending) {
+    int priority = 0;
+    pending.add(line);
+    if (pending.size() == GROUP_SIZE) {
+      priority = priority(intersection(pending).get(0));
+      pending.clear();
+    }
+    return priority;
   }
 
   private int priority(int ch) {
     return ch + (Character.isLowerCase(ch) ? LOWER_CASE_OFFSET : UPPER_CASE_OFFSET);
   }
 
-  private static class Intersection {
-
-    private Set<Integer> content;
-
-    @SafeVarargs
-    public Intersection(Collection<Integer>... universes) {
-      for (Collection<Integer> universe : universes) {
-        intersect(universe);
-      }
+  private List<Integer> intersection(Collection<String> lines) {
+    Set<Integer> intersection;
+    Iterator<String> iterator = lines.iterator();
+    if (iterator.hasNext()) {
+      intersection = charSet(iterator.next(), true);
+      iterator.forEachRemaining((line) -> intersection.retainAll(charSet(line, false)));
+    } else {
+      intersection = Set.of();
     }
+    return new LinkedList<>(intersection);
+  }
 
-    public void intersect(Collection<Integer> retain) {
-      if (content == null) {
-        content = new HashSet<>(retain);
-      } else {
-        content.retainAll(retain);
-      }
-    }
-
-    public Set<Integer> getContent() {
-      return content;
-    }
-
+  private Set<Integer> charSet(String source, boolean guaranteedMutable) {
+    Stream<Integer> chars = source.chars().boxed();
+    return guaranteedMutable
+        ? chars.collect(Collectors.toCollection(HashSet::new))
+        : chars.collect(Collectors.toSet());
   }
 
 }
