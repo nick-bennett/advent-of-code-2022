@@ -7,12 +7,19 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class DataSource {
 
@@ -82,6 +89,17 @@ public class DataSource {
     return expand(paragraphs());
   }
 
+  public Stream<Stream<String>> chunkedLines(int chunkSize) throws IOException {
+    Iterator<String> iterator = lines().iterator();
+    return StreamSupport.stream(
+        Spliterators.spliteratorUnknownSize(
+            new Chunker(iterator, chunkSize),
+            Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.IMMUTABLE
+        ),
+        false
+    );
+  }
+
   private Stream<Stream<String>> expand(Stream<String> input) {
     return input
         .map((block) ->
@@ -124,6 +142,35 @@ public class DataSource {
 
     public DataSource build() throws FileNotFoundException {
       return new DataSource(this);
+    }
+
+  }
+
+  private static class Chunker implements Iterator<Stream<String>> {
+
+    private final int chunkSize;
+    private final Iterator<String> source;
+
+    public Chunker(Iterator<String> source, int chunkSize) {
+      this.source = source;
+      this.chunkSize = chunkSize;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return source.hasNext();
+    }
+
+    @Override
+    public Stream<String> next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+      List<String> pending = new LinkedList<>();
+      for (int i = 0; i < chunkSize && source.hasNext(); i++) {
+        pending.add(source.next());
+      }
+      return pending.stream();
     }
 
   }

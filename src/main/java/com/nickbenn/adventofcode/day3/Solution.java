@@ -35,7 +35,7 @@ public class Solution {
   }
 
   public int getMisplacedPrioritySum() throws IOException {
-    try (Stream<String> lines = source()) {
+    try (Stream<String> lines = DataSource.simpleLines(inputFile, getClass())) {
       return lines
           .mapToInt(this::getMisplacedItemPriority)
           .sum();
@@ -43,20 +43,17 @@ public class Solution {
   }
 
   public int getBadgePrioritySum() throws IOException {
-    try (Stream<String> lines = source()) {
-      Collection<String> pending = new LinkedList<>();
-      return lines
-          .mapToInt((line) -> getBadgePriority(line, pending))
+    try (
+        Stream<Stream<String>> chunks = new DataSource.Builder()
+            .setInputFile(inputFile)
+            .setContext(getClass())
+            .build()
+            .chunkedLines(GROUP_SIZE)
+    ) {
+      return chunks
+          .mapToInt(this::getBadgePriority)
           .sum();
     }
-  }
-
-  private Stream<String> source() throws IOException {
-    return new DataSource.Builder()
-        .setInputFile(inputFile)
-        .setContext(getClass())
-        .build()
-        .lines();
   }
 
   private int getMisplacedItemPriority(String line) {
@@ -66,14 +63,8 @@ public class Solution {
     return priority(intersection(List.of(left, right)).get(0));
   }
 
-  private int getBadgePriority(String line, Collection<String> pending) {
-    int priority = 0;
-    pending.add(line);
-    if (pending.size() == GROUP_SIZE) {
-      priority = priority(intersection(pending).get(0));
-      pending.clear();
-    }
-    return priority;
+  private int getBadgePriority(Stream<String> chunk) {
+    return priority(intersection(chunk.collect(Collectors.toList())).get(0));
   }
 
   private int priority(int ch) {
