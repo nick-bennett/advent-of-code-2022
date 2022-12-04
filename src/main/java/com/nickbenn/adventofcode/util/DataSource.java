@@ -1,10 +1,13 @@
 package com.nickbenn.adventofcode.util;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -13,26 +16,37 @@ import java.util.stream.Stream;
 
 public class DataSource {
 
+  private static final String BAD_INPUT_FILE_FORMAT = "File not found, or is inaccessible: %s";
   private static final Pattern PARAGRAPH_SPLITTER = Pattern.compile("\\r?\\n\\s*?\\r?\\n");
-  private static final boolean DEFAULT_TRIMMED = true;
-  private static final boolean DEFAULT_STRIPPED = true;
 
+  private final boolean trimmed;
+  private final boolean stripped;
   private final Path path;
 
-  public DataSource(Class<?> clazz, String inputFile) {
+  private DataSource(Builder builder) throws FileNotFoundException {
     try {
-      //noinspection DataFlowIssue
-      path = Paths.get(clazz.getResource(inputFile).toURI());
+      trimmed = builder.trimmed;
+      stripped = builder.stripped;
+      URL url = (builder.context != null)
+          ? builder.context.getResource(builder.inputFile)
+          : getClass().getResource(builder.inputFile);
+      path = Paths.get(Objects.requireNonNull(url).toURI());
+    } catch (NullPointerException e) {
+      throw new FileNotFoundException(String.format(BAD_INPUT_FILE_FORMAT, builder.inputFile));
     } catch (URISyntaxException e) { // Should never happen with Class.getResource(String).toURI().
       throw new RuntimeException(e);
     }
   }
 
-  public Stream<String> lines() throws IOException {
-    return lines(DEFAULT_TRIMMED, DEFAULT_STRIPPED);
+  public static Stream<String> simpleLines(String inputFile, Class<?> context) throws IOException {
+    return new DataSource.Builder()
+        .setInputFile(inputFile)
+        .setContext(context)
+        .build()
+        .lines();
   }
 
-  public Stream<String> lines(boolean trimmed, boolean stripped) throws IOException {
+  public Stream<String> lines() throws IOException {
     Stream<String> lines = Files.lines(path);
     if (trimmed) {
       lines = lines.map(String::trim);
@@ -44,11 +58,6 @@ public class DataSource {
   }
 
   public Stream<String> blocks(Pattern splitter) throws IOException {
-    return blocks(splitter, DEFAULT_TRIMMED, DEFAULT_STRIPPED);
-  }
-
-  public Stream<String> blocks(Pattern splitter, boolean trimmed, boolean stripped)
-      throws IOException {
     Scanner scanner = new Scanner(path);
     scanner.useDelimiter(splitter);
     Stream<String> blocks = scanner.tokens();
@@ -62,32 +71,18 @@ public class DataSource {
   }
 
   public Stream<Stream<String>> blockLines(Pattern splitter) throws IOException {
-    return blockLines(splitter, DEFAULT_TRIMMED, DEFAULT_STRIPPED);
-  }
-
-  public Stream<Stream<String>> blockLines(Pattern splitter, boolean trimmed, boolean stripped)
-      throws IOException {
-    return expand(blocks(splitter, trimmed, stripped), trimmed, stripped);
+    return expand(blocks(splitter));
   }
 
   public Stream<String> paragraphs() throws IOException {
-    return paragraphs(DEFAULT_TRIMMED, DEFAULT_STRIPPED);
-  }
-
-  public Stream<String> paragraphs(boolean trimmed, boolean stripped) throws IOException {
-    return blocks(PARAGRAPH_SPLITTER, trimmed, stripped);
+    return blocks(PARAGRAPH_SPLITTER);
   }
 
   public Stream<Stream<String>> paragraphLines() throws IOException {
-    return paragraphLines(DEFAULT_TRIMMED, DEFAULT_STRIPPED);
+    return expand(paragraphs());
   }
 
-  public Stream<Stream<String>> paragraphLines(boolean trimmed, boolean stripped)
-      throws IOException {
-    return expand(paragraphs(trimmed, stripped), trimmed, stripped);
-  }
-
-  private Stream<Stream<String>> expand(Stream<String> input, boolean trimmed, boolean stripped) {
+  private Stream<Stream<String>> expand(Stream<String> input) {
     return input
         .map((block) ->
             block
@@ -95,6 +90,42 @@ public class DataSource {
                 .map(trimmed ? String::trim : Function.identity())
                 .filter(stripped ? Predicate.not(String::isEmpty) : (line) -> true)
         );
+  }
+
+  public static class Builder {
+
+    private String inputFile = Defaults.INPUT_FILE;
+    private Class<?> context;
+    private boolean trimmed = Defaults.TRIMMED;
+    private boolean stripped = Defaults.STRIPPED;
+
+    public Builder() {
+    }
+
+    public Builder setInputFile(String inputFile) {
+      this.inputFile = inputFile;
+      return this;
+    }
+
+    public Builder setContext(Class<?> context) {
+      this.context = context;
+      return this;
+    }
+
+    public Builder setTrimmed(boolean trimmed) {
+      this.trimmed = trimmed;
+      return this;
+    }
+
+    public Builder setStripped(boolean stripped) {
+      this.stripped = stripped;
+      return this;
+    }
+
+    public DataSource build() throws FileNotFoundException {
+      return new DataSource(this);
+    }
+
   }
 
 }

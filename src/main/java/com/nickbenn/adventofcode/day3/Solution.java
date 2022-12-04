@@ -35,7 +35,7 @@ public class Solution {
   }
 
   public int getMisplacedPrioritySum() throws IOException {
-    try (Stream<String> lines = new DataSource(getClass(), inputFile).lines()) {
+    try (Stream<String> lines = source()) {
       return lines
           .mapToInt(this::getMisplacedItemPriority)
           .sum();
@@ -43,12 +43,20 @@ public class Solution {
   }
 
   public int getBadgePrioritySum() throws IOException {
-    try (Stream<String> lines = new DataSource(getClass(), inputFile).lines()) {
+    try (Stream<String> lines = source()) {
       Collection<String> pending = new LinkedList<>();
       return lines
           .mapToInt((line) -> getBadgePriority(line, pending))
           .sum();
     }
+  }
+
+  private Stream<String> source() throws IOException {
+    return new DataSource.Builder()
+        .setInputFile(inputFile)
+        .setContext(getClass())
+        .build()
+        .lines();
   }
 
   private int getMisplacedItemPriority(String line) {

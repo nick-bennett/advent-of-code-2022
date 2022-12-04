@@ -24,7 +24,13 @@ public class Solution {
   }
 
   public int getMaxCalories(int count) throws IOException {
-    try (Stream<Stream<String>> groups = new DataSource(getClass(), inputFile).paragraphLines()) {
+    try (
+        Stream<Stream<String>> groups = new DataSource.Builder()
+            .setInputFile(inputFile)
+            .setContext(getClass())
+            .build()
+            .paragraphLines()
+    ) {
       return -groups
           .mapToInt((group) ->
               group

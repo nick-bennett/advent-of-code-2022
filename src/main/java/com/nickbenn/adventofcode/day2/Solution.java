@@ -28,7 +28,7 @@ public class Solution {
   }
 
   public int getStrategyBasedValue() throws IOException {
-    try (Stream<String> lines = new DataSource(getClass(), inputFile).lines()) {
+    try (Stream<String> lines = DataSource.simpleLines(inputFile, getClass())) {
       return lines
           .map(STRATEGY_PARSER::matcher)
           .filter(Matcher::matches)
@@ -39,7 +39,7 @@ public class Solution {
   }
 
   public int getOutcomeBasedValue() throws IOException {
-    try (Stream<String> lines = new DataSource(getClass(), inputFile).lines()) {
+    try (Stream<String> lines = DataSource.simpleLines(inputFile, getClass())) {
       return lines
           .map(STRATEGY_PARSER::matcher)
           .filter(Matcher::matches)

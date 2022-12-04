@@ -5,7 +5,6 @@ import java.io.IOException;
 
 public class Solution {
 
-
   private final String inputFile;
 
   public Solution() {
