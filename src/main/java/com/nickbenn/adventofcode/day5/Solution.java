@@ -12,10 +12,9 @@ import java.util.stream.Stream;
 
 public class Solution {
 
-  private static final Pattern ARRANGEMENT_LINE_PATTERN = Pattern.compile("^.*\\[\\p{Alpha}+].*$");
-  private static final Pattern CRATE_PATTERN = Pattern.compile("\\s?(?:\\[(\\p{Alpha}+)]|\\s{3})");
-  private static final Pattern MOVEMENT_PATTERN =
-      Pattern.compile("^move (\\d+) from (\\d+) to (\\d+)\\s*$");
+  private static final Pattern ARRANGEMENT_LINE_PATTERN = Pattern.compile("^.*\\[.].*$");
+  private static final Pattern CRATE_PATTERN = Pattern.compile("\\s?(?:\\[(.)]|\\s{3})");
+  private static final Pattern MOVEMENT_PATTERN = Pattern.compile("^move\\D+(\\d+)\\D+(\\d+)\\D+(\\d+).*$");
 
   private final String inputFile;
   private final List<List<Character>> piles;
