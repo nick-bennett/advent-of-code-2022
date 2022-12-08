@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Day 7")
+@DisplayName("Day 7: No Space Left on the Device")
 class NoSpaceTest {
 
   NoSpace noSpace;

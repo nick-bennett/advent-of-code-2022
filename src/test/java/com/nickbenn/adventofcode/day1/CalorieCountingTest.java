@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-@DisplayName("Day 1")
+@DisplayName("Day 1: Calorie Counting")
 class CalorieCountingTest {
 
   CalorieCounting calorieCounting;

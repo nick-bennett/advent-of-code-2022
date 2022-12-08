@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Day 2")
+@DisplayName("Day 2: Rock-Paper-Scissors")
 class RockPaperScissorsTest {
 
   RockPaperScissors rps;

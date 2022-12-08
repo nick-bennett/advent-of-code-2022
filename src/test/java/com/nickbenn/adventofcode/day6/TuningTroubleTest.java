@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-@DisplayName("Day 6")
+@DisplayName("Day 6: Tuning Trouble")
 class TuningTroubleTest {
 
   TuningTrouble tuning;

@@ -14,7 +14,15 @@ public class TreetopTreeHouse {
   }
 
   public TreetopTreeHouse(String inputFile) throws IOException {
-    forest = readForest(inputFile);
+    try (
+        Stream<int[]> lines = new DataSource.Builder()
+            .setInputFile(inputFile)
+            .setContext(getClass())
+            .build()
+            .digits()
+    ) {
+      forest = lines.toArray(int[][]::new);
+    }
   }
 
   public static void main(String[] args) throws IOException {
@@ -41,18 +49,6 @@ public class TreetopTreeHouse {
       }
     }
     return bestScore;
-  }
-
-  private int[][] readForest(String inputFile) throws IOException {
-    try (
-        Stream<int[]> lines = new DataSource.Builder()
-            .setInputFile(inputFile)
-            .setContext(getClass())
-            .build()
-            .digits()
-    ) {
-      return lines.toArray(int[][]::new);
-    }
   }
 
   private void computeEastWestThresholds(int[][] fromWest, int[][] fromEast) {

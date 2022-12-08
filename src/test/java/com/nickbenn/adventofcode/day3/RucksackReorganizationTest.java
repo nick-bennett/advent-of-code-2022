@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Day 3")
+@DisplayName("Day 3: Rucksack Reorganization")
 class RucksackReorganizationTest {
 
   RucksackReorganization reorg;

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Day 8")
+@DisplayName("Day 8: Treetop Tree House")
 class TreetopTreeHouseTest {
 
   TreetopTreeHouse treetop;
