@@ -100,6 +100,15 @@ public class DataSource {
     );
   }
 
+  public Stream<int[]> digits() throws IOException {
+    return lines()
+        .map((line) -> line
+            .chars()
+            .map((c) -> c - '0')
+            .toArray()
+        );
+  }
+
   private Stream<Stream<String>> expand(Stream<String> input) {
     return input
         .map((block) ->

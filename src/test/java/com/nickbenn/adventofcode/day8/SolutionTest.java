@@ -17,4 +17,16 @@ class SolutionTest {
     solution = new Solution();
   }
 
+  @DisplayName("Part 1")
+  @Test
+  void getVisibleTrees() throws IOException {
+    assertEquals(21, solution.getVisibleTrees());
+  }
+
+  @DisplayName("Part 2")
+  @Test
+  void getMaxScenicScore() throws IOException {
+    assertEquals(8, solution.getMaxScenicScore());
+  }
+
 }
