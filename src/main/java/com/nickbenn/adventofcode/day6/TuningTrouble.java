@@ -5,25 +5,25 @@ import com.nickbenn.adventofcode.util.Defaults;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-public class Solution {
+public class TuningTrouble {
 
   public static final int PACKET_MARKER_LENGTH = 4;
   public static final int MESSAGE_MARKER_LENGTH = 14;
 
   private final String inputFile;
 
-  public Solution() {
+  public TuningTrouble() {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) {
+  public TuningTrouble(String inputFile) {
     this.inputFile = inputFile;
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    solution.printMarkerLocations(PACKET_MARKER_LENGTH);
-    solution.printMarkerLocations(MESSAGE_MARKER_LENGTH);
+    TuningTrouble tuning = new TuningTrouble();
+    tuning.printMarkerLocations(PACKET_MARKER_LENGTH);
+    tuning.printMarkerLocations(MESSAGE_MARKER_LENGTH);
   }
 
   public void printMarkerLocations(int markerLength) throws IOException {

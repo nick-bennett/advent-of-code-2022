@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Solution {
+public class RucksackReorganization {
 
   private static final int LOWER_CASE_OFFSET = 1 - 'a';
   private static final int UPPER_CASE_OFFSET = 27 - 'A';
@@ -20,18 +20,18 @@ public class Solution {
 
   private final String inputFile;
 
-  public Solution() {
+  public RucksackReorganization() {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) {
+  public RucksackReorganization(String inputFile) {
     this.inputFile = inputFile;
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    System.out.println(solution.getMisplacedPrioritySum());
-    System.out.println(solution.getBadgePrioritySum());
+    RucksackReorganization reorg = new RucksackReorganization();
+    System.out.println(reorg.getMisplacedPrioritySum());
+    System.out.println(reorg.getBadgePrioritySum());
   }
 
   public int getMisplacedPrioritySum() throws IOException {

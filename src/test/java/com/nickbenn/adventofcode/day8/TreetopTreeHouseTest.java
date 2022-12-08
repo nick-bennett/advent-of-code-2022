@@ -8,25 +8,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Day 8")
-class SolutionTest {
+class TreetopTreeHouseTest {
 
-  Solution solution;
+  TreetopTreeHouse treetop;
 
   @BeforeEach
   void setUp() throws IOException {
-    solution = new Solution();
+    treetop = new TreetopTreeHouse();
   }
 
   @DisplayName("Part 1")
   @Test
   void getVisibleTrees() throws IOException {
-    assertEquals(21, solution.getVisibleTrees());
+    assertEquals(21, treetop.getVisibleTrees());
   }
 
   @DisplayName("Part 2")
   @Test
   void getMaxScenicScore() throws IOException {
-    assertEquals(8, solution.getMaxScenicScore());
+    assertEquals(8, treetop.getMaxScenicScore());
   }
 
 }

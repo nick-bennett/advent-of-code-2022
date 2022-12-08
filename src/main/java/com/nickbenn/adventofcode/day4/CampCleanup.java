@@ -7,25 +7,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Solution {
+public class CampCleanup {
 
   private static final Pattern ASSIGNMENT_PARSER =
       Pattern.compile("^(\\d+)-(\\d+),(\\d+)-(\\d+)\\s*$");
 
   private final String inputFile;
 
-  public Solution() {
+  public CampCleanup() {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) {
+  public CampCleanup(String inputFile) {
     this.inputFile = inputFile;
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    System.out.println(solution.getFullRedundancyCount());
-    System.out.println(solution.getPartialRedundancyCount());
+    CampCleanup cleanup = new CampCleanup();
+    System.out.println(cleanup.getFullRedundancyCount());
+    System.out.println(cleanup.getPartialRedundancyCount());
   }
 
   public long getFullRedundancyCount() throws IOException {

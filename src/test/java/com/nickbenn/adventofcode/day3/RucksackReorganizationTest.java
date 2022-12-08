@@ -8,25 +8,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Day 3")
-class SolutionTest {
+class RucksackReorganizationTest {
 
-  Solution solution;
+  RucksackReorganization reorg;
 
   @BeforeEach
   void setUp() {
-    solution = new Solution();
+    reorg = new RucksackReorganization();
   }
 
   @DisplayName("Part 1")
   @Test
   void getMisplacedPrioritySum() throws IOException {
-    assertEquals(157, solution.getMisplacedPrioritySum());
+    assertEquals(157, reorg.getMisplacedPrioritySum());
   }
 
   @DisplayName("Part 2")
   @Test
   void getBadgePrioritySum() throws IOException {
-    assertEquals(70, solution.getBadgePrioritySum());
+    assertEquals(70, reorg.getBadgePrioritySum());
   }
 
 }

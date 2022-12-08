@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Solution {
+public class NoSpace {
 
   private static final Pattern COMMAND_PATTERN = Pattern.compile("^\\$\\s+(?:ls|cd\\s+(\\S+)).*$");
   private static final String ROOT_DIRECTORY = "/";
@@ -21,11 +21,11 @@ public class Solution {
 
   private Entry.Directory current;
 
-  public Solution() throws IOException {
+  public NoSpace() throws IOException {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) throws IOException {
+  public NoSpace(String inputFile) throws IOException {
     try (Stream<String> lines = DataSource.simpleLines(inputFile, getClass())) {
       root = Entry.makeRoot();
       lines.forEachOrdered(this::parse);
@@ -33,9 +33,9 @@ public class Solution {
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    System.out.println(solution.getSumUnderThreshold());
-    System.out.println(solution.getRemovalCandidate());
+    NoSpace noSpace = new NoSpace();
+    System.out.println(noSpace.getSumUnderThreshold());
+    System.out.println(noSpace.getRemovalCandidate());
   }
 
   public int getSumUnderThreshold() {

@@ -7,24 +7,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Solution {
+public class RockPaperScissors {
 
   private static final Pattern STRATEGY_PARSER = Pattern.compile("^\\s*([A-C])\\s+([X-Z])\\s*$");
 
   private final String inputFile;
 
-  public Solution() {
+  public RockPaperScissors() {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) {
+  public RockPaperScissors(String inputFile) {
     this.inputFile = inputFile;
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    System.out.println(solution.getStrategyBasedValue());
-    System.out.println(solution.getOutcomeBasedValue());
+    RockPaperScissors rps = new RockPaperScissors();
+    System.out.println(rps.getStrategyBasedValue());
+    System.out.println(rps.getOutcomeBasedValue());
   }
 
   public int getStrategyBasedValue() throws IOException {

@@ -8,25 +8,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Day 5")
-class SolutionTest {
+class SupplyStacksTest {
 
-  Solution solution;
+  SupplyStacks stacks;
 
   @BeforeEach
   void setUp() {
-    solution = new Solution();
+    stacks = new SupplyStacks();
   }
 
   @DisplayName("Part 1")
   @Test
   void getSingleMoveStackTops() throws IOException {
-    assertEquals("CMZ", solution.getSingleMoveStackTops());
+    assertEquals("CMZ", stacks.getSingleMoveStackTops());
   }
 
   @DisplayName("Part 2")
   @Test
   void getMultiMoveStackTops() throws IOException {
-    assertEquals("MCD", solution.getMultiMoveStackTops());
+    assertEquals("MCD", stacks.getMultiMoveStackTops());
   }
 
 }

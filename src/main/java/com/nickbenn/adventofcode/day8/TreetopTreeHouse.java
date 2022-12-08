@@ -5,22 +5,22 @@ import com.nickbenn.adventofcode.util.Defaults;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class Solution {
+public class TreetopTreeHouse {
 
   private final int[][] forest;
 
-  public Solution() throws IOException {
+  public TreetopTreeHouse() throws IOException {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) throws IOException {
+  public TreetopTreeHouse(String inputFile) throws IOException {
     forest = readForest(inputFile);
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    System.out.println(solution.getVisibleTrees());
-    System.out.println(solution.getMaxScenicScore());
+    TreetopTreeHouse treetop = new TreetopTreeHouse();
+    System.out.println(treetop.getVisibleTrees());
+    System.out.println(treetop.getMaxScenicScore());
   }
 
   public int getVisibleTrees() throws IOException {

@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Solution {
+public class SupplyStacks {
 
   private static final Pattern ARRANGEMENT_LINE_PATTERN = Pattern.compile("^.*\\[.].*$");
   private static final Pattern CRATE_PATTERN = Pattern.compile("\\s?(?:\\[(.)]|\\s{3})");
@@ -20,19 +20,19 @@ public class Solution {
   private final List<List<Character>> piles;
   private final List<Move> moves;
 
-  public Solution() {
+  public SupplyStacks() {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) {
+  public SupplyStacks(String inputFile) {
     this.inputFile = inputFile;
     piles = new ArrayList<>();
     moves = new LinkedList<>();
   }
 
   public static void main(String[] args) throws IOException {
-    System.out.println(new Solution().getSingleMoveStackTops());
-    System.out.println(new Solution().getMultiMoveStackTops());
+    System.out.println(new SupplyStacks().getSingleMoveStackTops());
+    System.out.println(new SupplyStacks().getMultiMoveStackTops());
   }
 
   public String getSingleMoveStackTops() throws IOException {

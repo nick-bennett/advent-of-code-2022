@@ -8,25 +8,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Day 2")
-class SolutionTest {
+class RockPaperScissorsTest {
 
-  Solution solution;
+  RockPaperScissors rps;
 
   @BeforeEach
   void setUp() {
-    solution = new Solution();
+    rps = new RockPaperScissors();
   }
 
   @DisplayName("Part 1")
   @Test
   void getStrategyBasedValue() throws IOException {
-    assertEquals(15, solution.getStrategyBasedValue());
+    assertEquals(15, rps.getStrategyBasedValue());
   }
 
   @DisplayName("Part 2")
   @Test
   void getOutcomeBasedValue() throws IOException {
-    assertEquals(12, solution.getOutcomeBasedValue());
+    assertEquals(12, rps.getOutcomeBasedValue());
   }
 
 }

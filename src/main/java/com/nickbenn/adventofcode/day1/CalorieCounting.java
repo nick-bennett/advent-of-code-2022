@@ -5,22 +5,22 @@ import com.nickbenn.adventofcode.util.Defaults;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class Solution {
+public class CalorieCounting {
 
   private final String inputFile;
 
-  public Solution() {
+  public CalorieCounting() {
     this(Defaults.INPUT_FILE);
   }
 
-  public Solution(String inputFile) {
+  public CalorieCounting(String inputFile) {
     this.inputFile = inputFile;
   }
 
   public static void main(String[] args) throws IOException {
-    Solution solution = new Solution();
-    System.out.println(solution.getMaxCalories(1));
-    System.out.println(solution.getMaxCalories(3));
+    CalorieCounting calorieCounting = new CalorieCounting();
+    System.out.println(calorieCounting.getMaxCalories(1));
+    System.out.println(calorieCounting.getMaxCalories(3));
   }
 
   public int getMaxCalories(int count) throws IOException {

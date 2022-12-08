@@ -8,25 +8,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Day 7")
-class SolutionTest {
+class NoSpaceTest {
 
-  Solution solution;
+  NoSpace noSpace;
 
   @BeforeEach
   void setUp() throws IOException {
-    solution = new Solution();
+    noSpace = new NoSpace();
   }
 
   @DisplayName("Part 1")
   @Test
   void getSumUnderThreshold() {
-    assertEquals(95437, solution.getSumUnderThreshold());
+    assertEquals(95437, noSpace.getSumUnderThreshold());
   }
 
   @DisplayName("Part 2")
   @Test
   void getRemovalCandidate() {
-    assertEquals(24933642, solution.getRemovalCandidate());
+    assertEquals(24933642, noSpace.getRemovalCandidate());
   }
 
 }
