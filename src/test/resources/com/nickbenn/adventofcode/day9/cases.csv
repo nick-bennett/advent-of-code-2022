@@ -1,0 +1,4 @@
+inputFile, knots, expected
+input1.txt, 2, 13
+input1.txt, 10, 1
+input2.txt, 10, 36
