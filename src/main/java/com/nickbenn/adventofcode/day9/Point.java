@@ -1,6 +1,12 @@
 package com.nickbenn.adventofcode.day9;
 
-public record Point(int x, int y) {
+import java.util.Comparator;
+import org.jetbrains.annotations.NotNull;
+
+public record Point(int x, int y) implements Comparable<Point> {
+
+  private static final Comparator<Point> NATURAL_ORDER =
+      Comparator.comparing(Point::x).thenComparing(Point::y);
 
   public Point() {
     this(0, 0);
@@ -22,6 +28,11 @@ public record Point(int x, int y) {
       next = this;
     }
     return next;
+  }
+
+  @Override
+  public int compareTo(@NotNull Point other) {
+    return NATURAL_ORDER.compare(this, other);
   }
 
 }
