@@ -1,4 +1,4 @@
-package com.nickbenn.adventofcode.day10;
+package com.nickbenn.adventofcode.day11;
 
 import com.nickbenn.adventofcode.util.Defaults;
 import java.io.IOException;
@@ -16,9 +16,9 @@ public class Solution {
   }
 
   public static void main(String[] args) throws IOException {
-    Solution bridge = new Solution();
-    System.out.println(/* Invoke solution method for part 1. */);
-    System.out.println(/* Invoke solution method for part 2. */);
+    Solution tube = new Solution();
+    System.out.println(/* TODO Invoke solution method for part 1. */);
+    System.out.println(/* TODO Invoke solution method for part 1. */);
   }
 
 }
