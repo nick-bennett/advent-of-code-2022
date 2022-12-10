@@ -1,6 +1,6 @@
 # Advent of Code 2022
 
-This project contains solutions for problems in the Advent of Code 2022.
+This project contains solutions for problems in the [Advent of Code 2022](https://adventofcode.com/2022).
 
 &copy; 2022 Nicholas Bennett.
 

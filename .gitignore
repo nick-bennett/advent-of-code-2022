@@ -63,3 +63,8 @@ derby.log
 
 # - metadata
 .DS_Store
+
+### Advent of Code ###
+
+# - Exclude copyrighted instructions.
+instructions/
