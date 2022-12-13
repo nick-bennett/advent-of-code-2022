@@ -2,6 +2,7 @@ package com.nickbenn.adventofcode.day9;
 
 import com.nickbenn.adventofcode.util.DataSource;
 import com.nickbenn.adventofcode.util.Defaults;
+import com.nickbenn.adventofcode.util.Direction;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,10 +28,10 @@ public class RopeBridge {
 
   public int countVisited(int knotCount) throws IOException {
     try (Stream<String> lines = DataSource.simpleLines(inputFile, getClass())) {
-      Point[] rope = Stream.generate(Point::new)
+      Knot[] rope = Stream.generate(Knot::new)
           .limit(knotCount)
-          .toArray(Point[]::new);
-      Set<Point> visited = new HashSet<>();
+          .toArray(Knot[]::new);
+      Set<Knot> visited = new HashSet<>();
       visited.add(rope[knotCount - 1]);
       lines
           .map(Movement::parse)
