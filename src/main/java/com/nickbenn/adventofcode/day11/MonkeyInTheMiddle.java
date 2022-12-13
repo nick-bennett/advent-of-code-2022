@@ -3,6 +3,7 @@ package com.nickbenn.adventofcode.day11;
 import com.nickbenn.adventofcode.util.DataSource;
 import com.nickbenn.adventofcode.util.Defaults;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.IntBinaryOperator;
+import java.util.function.LongBinaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -51,9 +53,13 @@ public class MonkeyInTheMiddle {
   }
 
   public long getTopProduct(int numRounds, int divisor) {
+    long leastCommonMultiple = monkeys
+        .stream()
+        .mapToLong(Monkey::getModulus)
+        .reduce(1, (a, b) -> a * b);
     for (int round = 0; round < numRounds; round++) {
       for (Monkey monkey : monkeys) {
-        monkey.inspect(divisor);
+        monkey.inspect(divisor, leastCommonMultiple);
       }
     }
     return monkeys
@@ -120,15 +126,19 @@ public class MonkeyInTheMiddle {
       monkeyMap.put(id, this);
     }
 
-    public void inspect(int divisor) {
+    public void inspect(int divisor, long normFactor) {
       while (!items.isEmpty()) {
         Item item = items.removeFirst();
-        int target = (item.update(operation, operand, divisor) % modulus == 0)
+        int target = (item.update(operation, operand, divisor, normFactor) % modulus == 0)
             ? trueTarget
             : falseTarget;
         monkeyMap.get(target).items.add(item);
         inspections++;
       }
+    }
+
+    public int getModulus() {
+      return modulus;
     }
 
     public long getInspections() {
@@ -147,14 +157,18 @@ public class MonkeyInTheMiddle {
 
     private static final String TO_STRING_FORMAT = "%s{worry=%d}";
 
-    private int worry;
+    private long worry;
 
-    public Item(int worry) {
+    public Item(long worry) {
       this.worry = worry;
     }
 
-    public int update(Operation operation, Integer operand, int divisor) {
-      return worry = operation.applyAsInt(worry, (operand != null) ? operand : worry) / divisor;
+    public long update(Operation operation, Integer operand, int divisor, long modulus) {
+      long result = operation.applyAsLong(worry, (operand != null) ? operand : worry) / divisor;
+      if (divisor == 1 && modulus > 1) {
+        result %= modulus;
+      }
+      return worry = result;
     }
 
     @Override
@@ -164,17 +178,17 @@ public class MonkeyInTheMiddle {
 
   }
 
-  private enum Operation implements IntBinaryOperator {
+  private enum Operation implements LongBinaryOperator {
 
     ADDITION('+') {
       @Override
-      public int applyAsInt(int left, int right) {
+      public long applyAsLong(long left, long right) {
         return left + right;
       }
     },
     MULTIPLICATION('*') {
       @Override
-      public int applyAsInt(int left, int right) {
+      public long applyAsLong(long left, long right) {
         return left * right;
       }
     };
