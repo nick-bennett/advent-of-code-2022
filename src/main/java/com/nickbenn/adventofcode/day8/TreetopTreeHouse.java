@@ -2,6 +2,7 @@ package com.nickbenn.adventofcode.day8;
 
 import com.nickbenn.adventofcode.util.DataSource;
 import com.nickbenn.adventofcode.util.Defaults;
+import com.nickbenn.adventofcode.util.Direction;
 import java.io.IOException;
 import java.util.stream.Stream;
 
@@ -74,7 +75,8 @@ public class TreetopTreeHouse {
     }
   }
 
-  private int countVisible(int[][] fromNorth, int[][] fromEast, int[][] fromSouth, int[][] fromWest) {
+  private int countVisible(int[][] fromNorth, int[][] fromEast, int[][] fromSouth,
+      int[][] fromWest) {
     int count = 0;
     for (int row = 0; row < forest.length; row++) {
       for (int col = 0; col < forest[row].length; col++) {
@@ -99,8 +101,8 @@ public class TreetopTreeHouse {
   }
 
   private int getVisibleTrees(int row, int col, int viewerHeight, Direction direction) {
-    int rowInc = direction.rowIncrement;
-    int colInc = direction.colIncrement;
+    int rowInc = direction.rowIncrement();
+    int colInc = direction.columnIncrement();
     int viewTrees = 0;
     for (int viewRow = row + rowInc, viewCol = col + colInc;
         inBounds(viewRow, viewCol);
@@ -116,23 +118,6 @@ public class TreetopTreeHouse {
   private boolean inBounds(int row, int col) {
     return row >= 0 && row < forest.length
         && col >= 0 && col < forest[row].length;
-  }
-
-  private enum Direction {
-
-    NORTH(-1, 0),
-    EAST(0, 1),
-    SOUTH(1, 0),
-    WEST(0, -1);
-
-    private final int rowIncrement;
-    private final int colIncrement;
-
-    Direction(int rowIncrement, int colIncrement) {
-      this.rowIncrement = rowIncrement;
-      this.colIncrement = colIncrement;
-    }
-
   }
 
 }

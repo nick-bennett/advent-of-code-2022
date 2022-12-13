@@ -17,7 +17,7 @@ public class Solution {
   }
 
   public static void main(String[] args) throws IOException {
-    Solution climber = new Solution();
+    Solution solution = new Solution();
     System.out.println(/* Invoke part 1 solution method. */);
     System.out.println(/* Invoke part 1 solution method. */);
   }

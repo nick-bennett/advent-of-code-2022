@@ -2,6 +2,7 @@ package com.nickbenn.adventofcode.day12;
 
 import com.nickbenn.adventofcode.util.DataSource;
 import com.nickbenn.adventofcode.util.Defaults;
+import com.nickbenn.adventofcode.util.Direction;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -100,53 +101,48 @@ public class HillClimbingAlgorithm {
 
     public int getMinPathLength() {
       prepareFlood(STEP_UP_CONSTRAINT);
-      Deque<Square> queue = new LinkedList<>();
-      int distance = 0;
-      addToFloodQueue(origin, queue, distance);
-      while (!queue.isEmpty()) {
-        Square square = queue.removeFirst();
-        distance = square.getDistance();
-        if (square == destination) {
-          break;
-        }
-        for (Square neighbor : square.getFloodableNeighbors()) {
-          addToFloodQueue(neighbor, queue, distance + 1);
-        }
-      }
-      return distance;
+      return fillFromUntil(origin, (square) -> square == destination);
     }
 
     public int getMinHikeLength() {
       prepareFlood(STEP_DOWN_CONSTRAINT);
-      Deque<Square> queue = new LinkedList<>();
-      int distance = 0;
-      addToFloodQueue(destination, queue, distance);
-      while (!queue.isEmpty()) {
-        Square square = queue.removeFirst();
-        distance = square.getDistance();
-        if (square.getHeight() == 0) {
-          break;
-        }
-        for (Square neighbor : square.getFloodableNeighbors()) {
-          addToFloodQueue(neighbor, queue, distance + 1);
-        }
-      }
-      return distance;
+      return fillFromUntil(destination, (square) -> square.getHeight() == 0);
     }
 
     private void prepareFlood(BiPredicate<Square, Square> stepConstraint) {
       for (Square[] row : squares) {
         for (Square square : row) {
-          square.setDistance(Integer.MAX_VALUE);
           square.setFlooded(false);
           square.setupNeighbors(stepConstraint);
         }
       }
     }
 
-    private void addToFloodQueue(Square square, Deque<Square> queue, int length) {
+    private int fillFromUntil(Square start, Predicate<Square> stoppingCondition) {
+      Deque<Square> queue = new LinkedList<>();
+      int distance = -1;
+      addToFloodQueue(start, queue);
+      processUntilEmpty:
+      while (!queue.isEmpty()) {
+        Square tail = queue.peekLast();
+        Square square = null;
+        distance++;
+        do {
+          square = queue.pollFirst();
+          if (stoppingCondition.test(square)) {
+            break processUntilEmpty;
+          }
+          //noinspection DataFlowIssue
+          for (Square neighbor : square.getFloodableNeighbors()) {
+            addToFloodQueue(neighbor, queue);
+          }
+        } while (square != tail);
+      }
+      return distance;
+    }
+
+    private void addToFloodQueue(Square square, Deque<Square> queue) {
       square.setFlooded(true);
-      square.setDistance(length);
       queue.add(square);
     }
 
@@ -157,8 +153,6 @@ public class HillClimbingAlgorithm {
       private final int height;
 
       private boolean flooded;
-      private int distance;
-      private Square previous;
       private Collection<Square> neighbors;
 
       private Square(int row, int column, int height) {
@@ -187,22 +181,6 @@ public class HillClimbingAlgorithm {
         this.flooded = flooded;
       }
 
-      public int getDistance() {
-        return distance;
-      }
-
-      public void setDistance(int distance) {
-        this.distance = distance;
-      }
-
-      public Square getPrevious() {
-        return previous;
-      }
-
-      public void setPrevious(Square previous) {
-        this.previous = previous;
-      }
-
       public Collection<Square> getFloodableNeighbors() {
         return neighbors
             .stream()
@@ -212,37 +190,12 @@ public class HillClimbingAlgorithm {
 
       private void setupNeighbors(BiPredicate<Square, Square> stepConstraint) {
         neighbors = Arrays.stream(Direction.values())
-            .map((dir) -> new int[]{row + dir.getRowOffset(), column + dir.getColumnOffset()})
+            .map((dir) -> new int[]{row + dir.rowIncrement(), column + dir.columnIncrement()})
             .filter((coords) -> coords[0] >= 0 && coords[0] < Grid.this.height
                 && coords[1] >= 0 && coords[1] < width)
             .map((coords) -> squares[coords[0]][coords[1]])
             .filter((neighbor) -> stepConstraint.test(this, neighbor))
             .toList();
-      }
-
-    }
-
-    private enum Direction {
-
-      NORTH(-1, 0),
-      EAST(0, 1),
-      SOUTH(1, 0),
-      WEST(0, -1);
-
-      private final int rowOffset;
-      private final int columnOffset;
-
-      Direction(int rowOffset, int columnOffset) {
-        this.rowOffset = rowOffset;
-        this.columnOffset = columnOffset;
-      }
-
-      public int getRowOffset() {
-        return rowOffset;
-      }
-
-      public int getColumnOffset() {
-        return columnOffset;
       }
 
     }
