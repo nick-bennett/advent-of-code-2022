@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("Day 10: Cathode-Ray Tube")
 class CathodeRayTubeTest {
 
   static final int EXPECTED_PRODUCT_SUM = 13140;
