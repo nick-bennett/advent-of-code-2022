@@ -19,7 +19,7 @@ public class BeaconExclusionZone {
       Pattern.compile("^.*?x=([-+]?\\d+), y=([-+]?\\d+):.*?x=([-+]?\\d+), y=([-+]?\\d+)\\D*$");
   private static final int EXCLUSION_ROW = 2_000_000;
   private static final int SEARCH_UPPER_BOUND = 4_000_001;
-  private static final int FREQUENCY_X_MULTIPLIER = 4_000_000;
+  private static final long FREQUENCY_X_MULTIPLIER = 4_000_000;
 
   private final List<SensorReading> readings;
 
@@ -50,15 +50,15 @@ public class BeaconExclusionZone {
 
   public int countExcluded(int row) {
     Set<Integer> beaconsInRow = new HashSet<>();
-    Set<Integer> excludedBeacons = new HashSet<>();
+    Set<Integer> excluded = new HashSet<>();
     for (SensorReading reading : readings) {
       if (reading.beacon().y() == row) {
         beaconsInRow.add(reading.beacon().x());
       }
-      excludedBeacons.addAll(reading.excludedSetInRow(row));
+      excluded.addAll(reading.excludedSetInRow(row));
     }
-    excludedBeacons.removeAll(beaconsInRow);
-    return excludedBeacons.size();
+    excluded.removeAll(beaconsInRow);
+    return excluded.size();
   }
 
   public long findMissingTuningFrequency(int lowerBound, int upperBound) {
@@ -66,29 +66,28 @@ public class BeaconExclusionZone {
     Range low = new Range(Integer.MIN_VALUE, lowerBound);
     Range high = new Range(upperBound, Integer.MAX_VALUE);
     for (int y = 0; y < upperBound; y++) {
-      int row = y;
-      List<Range> notExcluded = new LinkedList<>();
-      Range excluded = Stream.concat(
-              Stream.of(low, high),
-              readings
-                  .stream()
-                  .map((reading) -> reading.excludedRangeInRow(row))
-                  .filter(Predicate.not(Range::isEmpty))
-          )
+      List<Range> gaps = new LinkedList<>();
+      var ignored = Stream.concat(Stream.of(low, high), exclusionsInRow(y))
           .sorted()
           .reduce((r1, r2) -> {
-            if (r1.to() < r2.from()) {
-              notExcluded.add(new Range(r1.to(), r2.from()));
+            if (!r1.isContiguous(r2)) {
+              gaps.add(r1.gap(r2));
             }
             return r1.extend(r2);
-          })
-          .orElse(Range.EMPTY_RANGE);
-      if (!notExcluded.isEmpty()) {
-        result = (long) notExcluded.get(0).from() * FREQUENCY_X_MULTIPLIER + row;
+          });
+      if (!gaps.isEmpty()) {
+        result = FREQUENCY_X_MULTIPLIER * gaps.get(0).from() + y;
         break;
       }
     }
     return result;
+  }
+
+  private Stream<Range> exclusionsInRow(int row) {
+    return readings
+        .stream()
+        .map((reading) -> reading.excludedRangeInRow(row))
+        .filter(Predicate.not(Range::isEmpty));
   }
 
 }

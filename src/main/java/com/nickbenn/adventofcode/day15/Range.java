@@ -26,6 +26,14 @@ record Range(int from, int to) implements Comparable<Range> {
             : new Range(Math.min(from, other.from), Math.max(to, other.to));
   }
 
+  public Range gap(Range other) {
+    return isContiguous(other)
+        ? EMPTY_RANGE
+        : (to < other.from)
+            ? new Range(to, other.from)
+            : new Range(other.to, from);
+  }
+
   public boolean isEmpty() {
     return to <= from;
   }
